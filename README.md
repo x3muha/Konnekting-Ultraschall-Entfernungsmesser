@@ -16,6 +16,3 @@ Echo				= 6
 Compatible with: KONNEKTING Device Library 1.0.0 beta 4
 
 
-BUG: Zeiteinstellung für Zyklisches senden funktioniert nicht!!!
-
-

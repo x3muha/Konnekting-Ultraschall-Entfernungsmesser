@@ -2,7 +2,7 @@
 <KonnektingDevice xmlns="http://konnekting.de/xml/KonnektingDevice/v0">
     <Device ManufacturerId="999" DeviceId="1" Revision="1">
         <ManufacturerName>Peterich</ManufacturerName>
-        <DeviceName>Ultraschall Entfernungssensor</DeviceName>
+        <DeviceName>US-Fuellstandsensor</DeviceName>
         <Parameters>
             <ParameterGroup Name="Allgemein" Id="0">
                 <Parameter Id="0" IdName="Anlaufzeit">
@@ -10,21 +10,21 @@
                     <Value Type="uint8" Default="00" Options="" Min="00" Max="FF"/>
                 </Parameter>
             </ParameterGroup>
-            <ParameterGroup Name="Ultraschall Sensor" Id="1">
-                <Parameter Id="1" IdName="on_off">
-                    <Description>Ein/Aus Ultraschall Sensor</Description>
+            <ParameterGroup Name="US-Sensor" Id="1">
+                <Parameter Id="1" IdName="USSensor">
+                    <Description>US-Sensor</Description>
                     <Value Type="uint8" Default="00" Options="00=Nicht aktiv|01=Aktiv"/>
                 </Parameter>
-				<Parameter Id="2" IdName="Zyklus">
-                    <Description>Zyklisches Senden: 0-65535 s</Description>
-                    <Value Type="uint16" Default="003C" Options="" Min="0000" Max="FFFF"/>
-				</Parameter>
+                <Parameter Id="2" IdName="Zyklus">
+                    <Description>Entfernung zyklisch senden</Description>
+                    <Value Type="uint32" Default="0000001E" Options="" Min="00000000" Max="000FFFFF"/>
+                </Parameter>
 				<Parameter Id="3" IdName="SBC">
-                    <Description>Send by Change: 0-100 cm</Description>
+                    <Description>SBC Einheit in CM 0-100</Description>
                     <Value Type="uint8" Default="00" Options="" Min="00" Max="FF"/>
                 </Parameter>
-				<Parameter Id="4" IdName="delay">
-                    <Description>Delay zwischen zwei Messungen: 1000-65535 ms</Description>
+				<Parameter Id="4" IdName="MessDelay">
+                    <Description>Mess Delay 1000-65535ms</Description>
                     <Value Type="uint16" Default="2710" Options="" Min="03E8" Max="FFFF"/>
                 </Parameter>
             </ParameterGroup>
@@ -34,6 +34,18 @@
                 <Name>Entfernung</Name>
                 <Function>Messwert</Function>
                 <DataPointType>7.011</DataPointType>
+				<Flags>52</Flags>
+            </CommObject>
+			<CommObject Id="1" IdName="Entfernung 1">
+                <Name>Entfernung</Name>
+                <Function>Messwert</Function>
+                <DataPointType>7.011</DataPointType>
+				<Flags>52</Flags>
+            </CommObject>
+			<CommObject Id="2" IdName="Cyclus">
+                <Name>Cyclus</Name>
+                <Function>Settings</Function>
+                <DataPointType>16.000</DataPointType>
 				<Flags>52</Flags>
             </CommObject>
         </CommObjects>

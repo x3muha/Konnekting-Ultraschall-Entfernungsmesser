@@ -7,14 +7,14 @@
 #include <NewPing.h>
 
 // Programmier led
-#define PROG_LED_PIN 13
-
+//#define PROG_LED_PIN 13 // Nano/ProMini
+#define PROG_LED_PIN 17  //ProMicro
 // Programmier button
 #define PROG_BUTTON_PIN 3
 
 // KNX-Serialport
-#define KNX_SERIAL Serial // Nano/ProMini etc. use Serial
-
+//#define KNX_SERIAL Serial // Nano/ProMini etc. use Serial
+#define KNX_SERIAL Serial1 // ProMicro etc. use Serial1
 //Setup
 #define UNDEFINED_MM 9999
 #define TRIGGER_PIN  5  // Trigger Pin
@@ -24,13 +24,14 @@
 // Ultraschall Setup
 NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 
-unsigned long previousMillisZyklus = 0;
+unsigned long previousMillisZyklisch = 0;
 unsigned long previousMillisSBC = 0;
-unsigned long UsSBC = 0;
-unsigned long UsDelay = 1000;
-unsigned int UsZyklus = 0;
-int lastMM = 0;
-bool UsOnOff = false;
+unsigned long previousMillis = 0;
+unsigned long sbc = 0;
+unsigned long pingdelay = 1000;
+unsigned int UsCycleS = 6000;
+int lastCM = 0;
+bool OnOff = false;
 
 
 void setup() {
@@ -43,13 +44,13 @@ void setup() {
       delay(startDelay * 1000);
     }
 
-    previousMillisZyklus = millis();
+    previousMillisZyklisch = millis();
 
     // US Parameter Lesen
-    UsOnOff = Konnekting.getUINT8Param(1) == 1 ? true : false;
-    UsZyklus = Konnekting.getUINT16Param(2);
-    UsSBC = Konnekting.getUINT8Param(3);
-    UsDelay = Konnekting.getUINT16Param(4);
+    OnOff = Konnekting.getUINT8Param(1) == 1 ? true : false;
+    UsCycleS = (int)Konnekting.getUINT16Param(2);
+    sbc = Konnekting.getUINT8Param(3);
+    pingdelay = Konnekting.getUINT16Param(4);
   }
 }
 
@@ -57,35 +58,29 @@ void loop() {
   Knx.task();
   // only do measurements and other sketch related stuff if not in programming mode
   if (Konnekting.isReadyForApplication()) {
-
-    if (UsOnOff) {
+	    if (OnOff) {
 
       float currentMM = UNDEFINED_MM;
 
       // Zyklisches Senden
-      if (UsZyklus > 0) {
+      if (UsCycleS > 0) {
 
         // Überlaufprobleme verhindern
-        if (previousMillisZyklus > millis()) {
+        if (previousMillisZyklisch > millis()) {
           // Überspringt eine runde bei Überlaufproblemen
-          previousMillisZyklus = millis();
+          previousMillisZyklisch = millis();
         }
 
-        if (millis() - previousMillisZyklus >= (UsZyklus * 60 * 1000)) {
+        if ((millis() - previousMillisZyklisch)/1000 >= UsCycleS) {
 
-          previousMillisZyklus = millis();
-
-
-          currentMM = sonar.ping_cm();
-
-          Knx.write(0, currentMM);
+         previousMillisZyklisch = millis();
+         Knx.write(0, sonar.ping_cm());
         }
 
       }
 
       // Senden bei Änderung
-      if (UsSBC > 0) {
-
+      if (sbc > 0) {
         // Überlaufprobleme verhindern
         if (previousMillisSBC > millis()) {
           // Überspringt eine runde bei Überlaufproblemen
@@ -93,7 +88,7 @@ void loop() {
         }
 
 
-        if (millis() - previousMillisSBC >= UsDelay) {
+        if (millis() - previousMillisSBC >= pingdelay) {
 
           previousMillisSBC = millis();
 
@@ -101,18 +96,18 @@ void loop() {
             currentMM = sonar.ping_cm();
           }
 
-          float diff = (lastMM - currentMM);
+          float diff = (lastCM - currentMM);
 
           // Differenz muss immer Positiv sein!
           if (diff < 0) {
             diff *= -1;
           }
 
-          float requiredDiff = (float) UsSBC;
+          float requiredDiff = (float) sbc;
 
           if (diff >= requiredDiff) {
-            Knx.write(1, currentMM);
-            lastMM = currentMM;
+            Knx.write(0, sonar.ping_cm());
+            lastCM = currentMM;
           }
         }
       }
