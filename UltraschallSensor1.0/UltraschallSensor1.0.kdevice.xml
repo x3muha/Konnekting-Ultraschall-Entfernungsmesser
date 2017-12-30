@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <KonnektingDevice xmlns="http://konnekting.de/xml/KonnektingDevice/v0">
-    <Device ManufacturerId="999" DeviceId="1" Revision="1">
+    <Device ManufacturerId="1337" DeviceId="1" Revision="1">
         <ManufacturerName>Peterich</ManufacturerName>
         <DeviceName>US-Fuellstandsensor</DeviceName>
         <Parameters>

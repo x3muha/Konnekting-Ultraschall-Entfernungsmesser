@@ -1,4 +1,4 @@
-#define MANUFACTURER_ID 999
+#define MANUFACTURER_ID 1337
 #define DEVICE_ID 1
 #define REVISION 1
 
