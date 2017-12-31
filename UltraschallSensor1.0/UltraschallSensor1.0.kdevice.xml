@@ -16,7 +16,7 @@
                     <Value Type="uint8" Default="00" Options="00=Nicht aktiv|01=Aktiv"/>
                 </Parameter>
                 <Parameter Id="2" IdName="Zyklus">
-                    <Description>Entfernung zyklisch senden</Description>
+                    <Description>Entfernung zyklisch senden 0 - 65535s</Description>
                     <Value Type="uint32" Default="0000001E" Options="" Min="00000000" Max="000FFFFF"/>
                 </Parameter>
 				<Parameter Id="3" IdName="SBC">
@@ -34,18 +34,6 @@
                 <Name>Entfernung</Name>
                 <Function>Messwert</Function>
                 <DataPointType>7.011</DataPointType>
-				<Flags>52</Flags>
-            </CommObject>
-			<CommObject Id="1" IdName="Entfernung 1">
-                <Name>Entfernung</Name>
-                <Function>Messwert</Function>
-                <DataPointType>7.011</DataPointType>
-				<Flags>52</Flags>
-            </CommObject>
-			<CommObject Id="2" IdName="Cyclus">
-                <Name>Cyclus</Name>
-                <Function>Settings</Function>
-                <DataPointType>16.000</DataPointType>
 				<Flags>52</Flags>
             </CommObject>
         </CommObjects>
